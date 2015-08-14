@@ -32,7 +32,7 @@ cannonBaseImage.src = "img/suporte_canhao.png";
 var cannon = {
     imgPath: "img/canhao.png",
     img: new Image(),
-    angle: 30,
+    angle: -25,
     load: function(){
       this.img.onload = function() {
         resourcesLoaded += 1;
@@ -42,8 +42,14 @@ var cannon = {
       this.img.src = this.imgPath;
     },
     draw: function () {
-      context2d.drawImage(this.img, 160, 570,
+      context2d.save();
+      //context2d.setTransform(1, 0, 0, 1, 0, 0);
+      context2d.translate(150+this.img.width*0.333, 600+this.img.height*0.5);
+      var rad = this.angle * Math.PI / 180;
+      context2d.rotate(rad);
+      context2d.drawImage(this.img, -this.img.width*0.333, -this.img.height*0.5,
                           this.img.width, this.img.height);
+      context2d.restore();
     }
 };
 cannon.load();
@@ -61,7 +67,7 @@ function update() {
   lastMillis = currentMillis;
 
   if(resourcesLoaded >= 4) {
-		context2d.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+    context2d.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
     context2d.drawImage(schoolImage, canvasWidth-schoolImage.width, canvasHeight-schoolImage.height,
                         schoolImage.width, schoolImage.height);
     cannon.draw();
