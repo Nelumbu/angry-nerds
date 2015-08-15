@@ -7,6 +7,7 @@ var context2d = gamecanvas.get(0).getContext("2d");
 function toRadians(degrees){return degrees * Math.PI / 180;}
 function toDegrees(radians){return radians / Math.PI * 180;}
 
+var nerdsPositions = [{x:300,y:650}, {x:400,y:650}, {x:485,y:650}];
 var imageScale = canvasWidth / /*bg width*/ 2211;
 var resourcesLoaded = 0;
 var backgroundImage = new Image();
@@ -70,21 +71,70 @@ var cannon = {
       context2d.drawImage(this.img, -this.pivot.x, -this.pivot.y,
                           this.img.width, this.img.height);
       context2d.restore();
+    },
+    update: function (deltaMillis) {
+      if(forceArrow.active) {
+        this.angle = Math.max(toRadians(-90), 
+                     Math.min(Math.atan2(mouse.y-(this.y+this.pivot.y),
+                     mouse.x-(this.x+this.pivot.x)), 0));
+      } else {
+        this.angle = toRadians(-25);
+      }
     }
 };
 cannon.load();
 
 var forceArrow = {
   imgPath: "img/seta_forca.png",
-    img: new Image(),
-    x: 50,
-    y: canvasHeight * 0.5,
-    maxY: 0,
-    minY: 0,
-    force: 0,
-    signal: 1,
-    active: false,
-    load: function(){
+  img: new Image(),
+  x: 50,
+  y: canvasHeight * 0.5,
+  maxY: 0,
+  minY: 0,
+  force: 0,
+  signal: 1,
+  active: false,
+  load: function(){
+    this.img.onload = function() {
+      resourcesLoaded += 1;
+      this.width *= imageScale;
+      this.height *= imageScale;
+    };
+    this.img.src = this.imgPath;
+  },
+  draw: function () {
+    if (this.maxY == 0 || this.minY == 0) {
+      this.minY = 10+canvasHeight*0.5-forceImage.height*0.5;
+      this.maxY = this.minY + forceImage.height-10;
+    }
+    this.y = this.maxY - (this.maxY - this.minY) * this.force;
+    context2d.drawImage(this.img, this.x, this.y-this.img.height*0.5,
+                        this.img.width, this.img.height);
+  },
+  update: function (deltaMillis) {
+    if(this.active){
+      this.force += deltaMillis/1000 * this.signal;
+      if (this.force >= 1 && this.signal > 0){
+        this.force = 1;
+        this.signal *= -1;
+      } else if (this.force <= 0 && this.signal < 0) {
+        this.force = 0;
+        this.signal *= -1;
+      }
+    } else {
+      this.force = 0;
+      this.signal = 1;
+    }
+  }
+};
+forceArrow.load();
+
+var alfredo = {
+  imgPath: "img/alfredo.png",
+  img: new Image(),
+  x: nerdsPositions[0].x,
+  y: nerdsPositions[0].y,
+  load: function(){
       this.img.onload = function() {
         resourcesLoaded += 1;
         this.width *= imageScale;
@@ -93,31 +143,81 @@ var forceArrow = {
       this.img.src = this.imgPath;
     },
     draw: function () {
-      if (this.maxY == 0 || this.minY == 0) {
-        this.minY = 10+canvasHeight*0.5-forceImage.height*0.5;
-        this.maxY = this.minY + forceImage.height-10;
-      }
-      this.y = this.maxY - (this.maxY - this.minY) * this.force;
-      context2d.drawImage(this.img, this.x, this.y-this.img.height*0.5,
+      context2d.drawImage(this.img, this.x, this.y,
                           this.img.width, this.img.height);
     },
     update: function (deltaMillis) {
-      if(this.active){
-        this.force += deltaMillis/1000 * this.signal;
-        if (this.force >= 1 && this.signal > 0){
-          this.force = 1;
-          this.signal *= -1;
-        } else if (this.force <= 0 && this.signal < 0) {
-          this.force = 0;
-          this.signal *= -1;
-        }
-      } else {
-        this.force = 0;
-        this.signal = 1;
-      }
     }
 };
-forceArrow.load();
+alfredo.load();
+
+var alfredo = {
+  imgPath: "img/alfredo.png",
+  img: new Image(),
+  x: nerdsPositions[0].x,
+  y: nerdsPositions[0].y,
+  load: function(){
+      this.img.onload = function() {
+        resourcesLoaded += 1;
+        this.width *= imageScale;
+        this.height *= imageScale;
+      };
+      this.img.src = this.imgPath;
+    },
+    draw: function () {
+      context2d.drawImage(this.img, this.x, this.y,
+                          this.img.width, this.img.height);
+    },
+    update: function (deltaMillis) {
+    }
+};
+alfredo.load();
+
+var fuvio = {
+  imgPath: "img/fuvio.png",
+  img: new Image(),
+  x: nerdsPositions[1].x,
+  y: nerdsPositions[1].y,
+  load: function(){
+      this.img.onload = function() {
+        resourcesLoaded += 1;
+        this.width *= imageScale;
+        this.height *= imageScale;
+      };
+      this.img.src = this.imgPath;
+    },
+    draw: function () {
+      context2d.drawImage(this.img, this.x, this.y,
+                          this.img.width, this.img.height);
+    },
+    update: function (deltaMillis) {
+    }
+};
+fuvio.load();
+
+var leonel = {
+  imgPath: "img/leonel.png",
+  img: new Image(),
+  x: nerdsPositions[2].x,
+  y: nerdsPositions[2].y,
+  load: function(){
+      this.img.onload = function() {
+        resourcesLoaded += 1;
+        this.width *= imageScale;
+        this.height *= imageScale;
+      };
+      this.img.src = this.imgPath;
+    },
+    draw: function () {
+      context2d.drawImage(this.img, this.x, this.y,
+                          this.img.width, this.img.height);
+    },
+    update: function (deltaMillis) {
+    }
+};
+leonel.load();
+
+var allNerds = [alfredo, fuvio, leonel];
 
 var mouse = {
   x: 0,
@@ -127,7 +227,6 @@ var mouse = {
 document.onmousemove = function(e){
     mouse.x = e.pageX - canvasRect.left;
     mouse.y = e.pageY - canvasRect.top;
-    cannon.angle = Math.max(toRadians(-90) , Math.min(Math.atan2(mouse.y-(cannon.y+cannon.pivot.y), mouse.x-(cannon.x+cannon.pivot.x)), 0));
 }
 
 document.onmousedown = function(e){
@@ -142,12 +241,6 @@ document.onmouseup = function(e){
     }
 }
 
-var alfredo = {
-  imgPath: "img/alfredo.png",
-  x: 0,
-  y: 0,
-};
-
 var lastMillis = new Date().getTime()
 function update() {
   var currentMillis = new Date().getTime();
@@ -159,7 +252,11 @@ function update() {
     context2d.drawImage(schoolImage, canvasWidth-schoolImage.width, canvasHeight-schoolImage.height,
                         schoolImage.width, schoolImage.height);
     context2d.drawImage(forceImage, 20, canvasHeight*0.5-forceImage.height*0.5,
-                        forceImage.width, forceImage.height);
+                        forceImage.width, forceImage.height);     
+    for(var i=0; i<3; i++){
+      allNerds[i].draw();
+    }
+    cannon.update(deltaMillis);
     cannon.draw();
     context2d.drawImage(cannonBaseImage, 160, 620,
                         cannonBaseImage.width, cannonBaseImage.height);
