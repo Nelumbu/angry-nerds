@@ -165,6 +165,13 @@ function update() {
     forceArrow.update(deltaMillis);
     forceArrow.draw();
   }
+  else {
+    context2d.clearRect(0, 0, canvasWidth, canvasHeight);
+    context2d.font = "32px Helvetica bold"
+    context2d.textBaseline = "middle";
+    context2d.textAlign = "center";
+    context2d.fillText("Carregando...", canvasWidth*0.5, canvasHeight*0.5);
+  }
 
 }
 
