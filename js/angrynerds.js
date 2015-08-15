@@ -62,10 +62,9 @@ var cannon = {
     },
     draw: function () {
       context2d.save();
-      //context2d.setTransform(1, 0, 0, 1, 0, 0);
+      context2d.setTransform(1, 0, 0, 1, 0, 0);
       context2d.translate(this.x+this.pivot.x, this.y+this.pivot.y);
       var rad = this.angle;
-      //console.log("angle:", rad / Math.PI * 180)
       context2d.rotate(rad);
       context2d.drawImage(this.img, -this.pivot.x, -this.pivot.y,
                           this.img.width, this.img.height);
@@ -154,7 +153,7 @@ function update() {
   var deltaMillis = currentMillis - lastMillis;
   lastMillis = currentMillis;
 
-  if(resourcesLoaded >= 4) {
+  if(resourcesLoaded >= 6) {
     context2d.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
     context2d.drawImage(schoolImage, canvasWidth-schoolImage.width, canvasHeight-schoolImage.height,
                         schoolImage.width, schoolImage.height);
