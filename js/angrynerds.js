@@ -1,6 +1,7 @@
 var gamecanvas = $('#game-canvas');
 var canvasWidth = gamecanvas.attr('width');
 var canvasHeight = gamecanvas.attr('height');
+var canvasRect = gamecanvas.get(0).getBoundingClientRect();
 var context2d = gamecanvas.get(0).getContext("2d");
 
 function toRadians(degrees){return degrees * Math.PI / 180;}
@@ -124,8 +125,8 @@ var mouse = {
 };
 
 document.onmousemove = function(e){
-    mouse.x = e.pageX;
-    mouse.y = e.pageY;
+    mouse.x = e.pageX - canvasRect.left;
+    mouse.y = e.pageY - canvasRect.top;
     cannon.angle = Math.max(toRadians(-90) , Math.min(Math.atan2(mouse.y-(cannon.y+cannon.pivot.y), mouse.x-(cannon.x+cannon.pivot.x)), 0));
 }
 
