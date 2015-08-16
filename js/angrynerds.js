@@ -299,7 +299,14 @@ function update() {
     context2d.drawImage(schoolImage, canvasWidth-schoolImage.width, canvasHeight-schoolImage.height,
                         schoolImage.width, schoolImage.height);
     context2d.drawImage(forceImage, 20, canvasHeight*0.5-forceImage.height*0.5,
-                        forceImage.width, forceImage.height);     
+                        forceImage.width, forceImage.height);
+    context2d.fillStyle = "white";
+    context2d.font = "bold 24px Helvetica"
+    context2d.textBaseline = "top";
+    context2d.textAlign = "left";
+    context2d.fillText("Instruções: Clique e segure para atirar e mova o mouse para mirar", 20, 20);
+    context2d.fillStyle = "black";
+    context2d.strokeText("Instruções: Clique e segure para atirar e mova o mouse para mirar", 20, 20);
     for(var i=0; i<3; i++){
       allNerds[i].draw();
       allTrolls[i].draw();
@@ -312,8 +319,9 @@ function update() {
     forceArrow.draw();
   }
   else {
+    context2d.fillStyle="#000000";
     context2d.clearRect(0, 0, canvasWidth, canvasHeight);
-    context2d.font = "32px Helvetica bold"
+    context2d.font = "bold 32px Helvetica"
     context2d.textBaseline = "middle";
     context2d.textAlign = "center";
     context2d.fillText("Carregando...", canvasWidth*0.5, canvasHeight*0.5);
