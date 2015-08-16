@@ -7,6 +7,7 @@ var context2d = gamecanvas.get(0).getContext("2d");
 function toRadians(degrees){return degrees * Math.PI / 180;}
 function toDegrees(radians){return radians / Math.PI * 180;}
 
+var nerdIndex = 0;
 var nerdsPositions = [{x:330,y:680}, {x:430,y:680}, {x:520,y:680}];
 var trollPositions = [{x:880,y:660}, {x:1030,y:445}, {x:1190,y:340}];
 var imageScale = canvasWidth / /*bg width*/ 2211;
@@ -79,7 +80,7 @@ var cannon = {
                      Math.min(Math.atan2(mouse.y-(this.y+this.pivot.y),
                      mouse.x-(this.x+this.pivot.x)), 0));
       } else {
-        this.angle = toRadians(-25);
+        //this.angle = toRadians(-25);
       }
     }
 };
@@ -130,11 +131,32 @@ var forceArrow = {
 };
 forceArrow.load();
 
+function collisionDetection(objA, objB){
+  var result = false;
+  var distanceX = (objB.x-objB.img.width*0.5)-(objA.x-objA.img.width*0.5);
+  var distanceY = (objB.y-objB.img.height*0.5)-(objA.y-objA.img.height*0.5);
+  var distanceLen = Math.sqrt(distanceX*distanceX + distanceY*distanceY);
+  var radiusA = Math.max(objA.img.width, objA.img.height) * 0.5;
+  var radiusB = Math.max(objB.img.width, objB.img.height) * 0.5;
+  if(distanceLen <= (radiusA+radiusB)){
+    result = true;
+  }
+  return result;
+}
+
+var IDLE = "idle";
+var TO_BE_SHOT = "to be shot";
+var FLYING = "flying";
+var DEAD = "dead";
+var maxForce = 600;
+
 var alfredo = {
   imgPath: "img/alfredo.png",
   img: new Image(),
   x: nerdsPositions[0].x,
   y: nerdsPositions[0].y,
+  speed: {x:0, y:0},
+  state: IDLE,
   load: function(){
       this.img.onload = function() {
         resourcesLoaded += 1;
@@ -144,10 +166,29 @@ var alfredo = {
       this.img.src = this.imgPath;
     },
     draw: function () {
+      if(this.state === IDLE || this.state === FLYING)
       context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
                           this.img.width, this.img.height);
     },
     update: function (deltaMillis) {
+      if(this.state === FLYING) {
+        var deltaSecs = deltaMillis/1000.0;
+        this.x += this.speed.x * deltaSecs;
+        this.y += this.speed.y * deltaSecs;
+        this.speed.y += 98 * deltaSecs;
+        for(var i=0; i<3; i++){
+          if(collisionDetection(this, allTrolls[i])){
+            this.state = DEAD;
+            allTrolls[i].state = DEAD;
+          }
+        }
+        if(this.x > canvasWidth || this.y > canvasHeight){
+          this.state = DEAD;
+        }
+      } else if(this.state === TO_BE_SHOT) {
+        this.x = cannon.x + cannon.pivot.x;
+        this.y = cannon.y + cannon.pivot.y;
+      }
     }
 };
 alfredo.load();
@@ -157,6 +198,8 @@ var fuvio = {
   img: new Image(),
   x: nerdsPositions[1].x,
   y: nerdsPositions[1].y,
+  speed: {x:0, y:0},
+  state: IDLE,
   load: function(){
       this.img.onload = function() {
         resourcesLoaded += 1;
@@ -166,10 +209,29 @@ var fuvio = {
       this.img.src = this.imgPath;
     },
     draw: function () {
+      if(this.state === IDLE || this.state === FLYING)
       context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
                           this.img.width, this.img.height);
     },
     update: function (deltaMillis) {
+      if(this.state === FLYING) {
+        var deltaSecs = deltaMillis/1000.0;
+        this.x += this.speed.x * deltaSecs;
+        this.y += this.speed.y * deltaSecs;
+        this.speed.y += 98 * deltaSecs;
+        for(var i=0; i<3; i++){
+          if(collisionDetection(this, allTrolls[i])){
+            this.state = DEAD;
+            allTrolls[i].state = DEAD;
+          }
+        }
+        if(this.x > canvasWidth || this.y > canvasHeight){
+          this.state = DEAD;
+        }
+      } else if(this.state === TO_BE_SHOT) {
+        this.x = cannon.x + cannon.pivot.x;
+        this.y = cannon.y + cannon.pivot.y;
+      }
     }
 };
 fuvio.load();
@@ -179,6 +241,8 @@ var leonel = {
   img: new Image(),
   x: nerdsPositions[2].x,
   y: nerdsPositions[2].y,
+  speed: {x:0, y:0},
+  state: IDLE,
   load: function(){
       this.img.onload = function() {
         resourcesLoaded += 1;
@@ -188,10 +252,29 @@ var leonel = {
       this.img.src = this.imgPath;
     },
     draw: function () {
-      context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
+      if(this.state === IDLE || this.state === FLYING)
+        context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
                           this.img.width, this.img.height);
     },
     update: function (deltaMillis) {
+      if(this.state === FLYING) {
+        var deltaSecs = deltaMillis/1000.0;
+        this.x += this.speed.x * deltaSecs;
+        this.y += this.speed.y * deltaSecs;
+        this.speed.y += 98 * deltaSecs;
+        for(var i=0; i<3; i++){
+          if(collisionDetection(this, allTrolls[i])){
+            this.state = DEAD;
+            allTrolls[i].state = DEAD;
+          }
+        }
+        if(this.x > canvasWidth || this.y > canvasHeight){
+          this.state = DEAD;
+        }
+      } else if(this.state === TO_BE_SHOT) {
+        this.x = cannon.x + cannon.pivot.x;
+        this.y = cannon.y + cannon.pivot.y;
+      }
     }
 };
 leonel.load();
@@ -203,6 +286,7 @@ var troll01 = {
   img: new Image(),
   x: trollPositions[0].x,
   y: trollPositions[0].y,
+  state: IDLE,
   load: function(){
       this.img.onload = function() {
         resourcesLoaded += 1;
@@ -212,6 +296,7 @@ var troll01 = {
       this.img.src = this.imgPath;
     },
     draw: function () {
+      if(this.state === IDLE)
       context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
                           this.img.width, this.img.height);
     },
@@ -225,6 +310,7 @@ var troll02 = {
   img: new Image(),
   x: trollPositions[1].x,
   y: trollPositions[1].y,
+  state: IDLE,
   load: function(){
       this.img.onload = function() {
         resourcesLoaded += 1;
@@ -234,6 +320,7 @@ var troll02 = {
       this.img.src = this.imgPath;
     },
     draw: function () {
+      if(this.state === IDLE)
       context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
                           this.img.width, this.img.height);
     },
@@ -247,6 +334,7 @@ var troll03 = {
   img: new Image(),
   x: trollPositions[2].x,
   y: trollPositions[2].y,
+  state: IDLE,
   load: function(){
       this.img.onload = function() {
         resourcesLoaded += 1;
@@ -256,6 +344,7 @@ var troll03 = {
       this.img.src = this.imgPath;
     },
     draw: function () {
+      if(this.state === IDLE)
       context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
                           this.img.width, this.img.height);
     },
@@ -277,14 +366,25 @@ document.onmousemove = function(e){
 }
 
 document.onmousedown = function(e){
-    if(e.button == 0){
-      forceArrow.active = true;
+    if(e.pageX > canvasRect.left && e.pageX < canvasRect.right &&
+       e.pageY > canvasRect.top && e.pageY < canvasRect.bottom && e.button == 0){
+      if(!forceArrow.active && nerdIndex < allNerds.length){
+        allNerds[nerdIndex].state = TO_BE_SHOT; 
+        forceArrow.active = true;
+      }
     }
 }
 
 document.onmouseup = function(e){
-    if(e.button == 0){
-      forceArrow.active = false;
+    if(e.pageX > canvasRect.left && e.pageX < canvasRect.right &&
+       e.pageY > canvasRect.top && e.pageY < canvasRect.bottom && e.button == 0){
+      if(forceArrow.active && nerdIndex < allNerds.length){
+        allNerds[nerdIndex].speed.x = Math.cos(cannon.angle) * forceArrow.force * maxForce;
+        allNerds[nerdIndex].speed.y = Math.sin(cannon.angle) * forceArrow.force * maxForce;
+        allNerds[nerdIndex].state = FLYING;
+        nerdIndex += 1;
+        forceArrow.active = false;
+      }
     }
 }
 
@@ -301,13 +401,12 @@ function update() {
     context2d.drawImage(forceImage, 20, canvasHeight*0.5-forceImage.height*0.5,
                         forceImage.width, forceImage.height);
     context2d.fillStyle = "white";
-    context2d.font = "bold 24px Helvetica"
+    context2d.font = "24px Helvetica"
     context2d.textBaseline = "top";
     context2d.textAlign = "left";
     context2d.fillText("Instruções: Clique e segure para atirar e mova o mouse para mirar", 20, 20);
-    context2d.fillStyle = "black";
-    context2d.strokeText("Instruções: Clique e segure para atirar e mova o mouse para mirar", 20, 20);
     for(var i=0; i<3; i++){
+      allNerds[i].update(deltaMillis);
       allNerds[i].draw();
       allTrolls[i].draw();
     }
@@ -330,3 +429,4 @@ function update() {
 }
 
 var loopInterval = setInterval(update, 33);
+
