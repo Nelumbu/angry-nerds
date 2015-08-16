@@ -7,7 +7,8 @@ var context2d = gamecanvas.get(0).getContext("2d");
 function toRadians(degrees){return degrees * Math.PI / 180;}
 function toDegrees(radians){return radians / Math.PI * 180;}
 
-var nerdsPositions = [{x:300,y:650}, {x:400,y:650}, {x:485,y:650}];
+var nerdsPositions = [{x:330,y:680}, {x:430,y:680}, {x:520,y:680}];
+var trollPositions = [{x:880,y:660}, {x:1030,y:445}, {x:1190,y:340}];
 var imageScale = canvasWidth / /*bg width*/ 2211;
 var resourcesLoaded = 0;
 var backgroundImage = new Image();
@@ -143,29 +144,7 @@ var alfredo = {
       this.img.src = this.imgPath;
     },
     draw: function () {
-      context2d.drawImage(this.img, this.x, this.y,
-                          this.img.width, this.img.height);
-    },
-    update: function (deltaMillis) {
-    }
-};
-alfredo.load();
-
-var alfredo = {
-  imgPath: "img/alfredo.png",
-  img: new Image(),
-  x: nerdsPositions[0].x,
-  y: nerdsPositions[0].y,
-  load: function(){
-      this.img.onload = function() {
-        resourcesLoaded += 1;
-        this.width *= imageScale;
-        this.height *= imageScale;
-      };
-      this.img.src = this.imgPath;
-    },
-    draw: function () {
-      context2d.drawImage(this.img, this.x, this.y,
+      context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
                           this.img.width, this.img.height);
     },
     update: function (deltaMillis) {
@@ -187,7 +166,7 @@ var fuvio = {
       this.img.src = this.imgPath;
     },
     draw: function () {
-      context2d.drawImage(this.img, this.x, this.y,
+      context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
                           this.img.width, this.img.height);
     },
     update: function (deltaMillis) {
@@ -209,7 +188,7 @@ var leonel = {
       this.img.src = this.imgPath;
     },
     draw: function () {
-      context2d.drawImage(this.img, this.x, this.y,
+      context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
                           this.img.width, this.img.height);
     },
     update: function (deltaMillis) {
@@ -218,6 +197,74 @@ var leonel = {
 leonel.load();
 
 var allNerds = [alfredo, fuvio, leonel];
+
+var troll01 = {
+  imgPath: "img/troll01.png",
+  img: new Image(),
+  x: trollPositions[0].x,
+  y: trollPositions[0].y,
+  load: function(){
+      this.img.onload = function() {
+        resourcesLoaded += 1;
+        this.width *= imageScale;
+        this.height *= imageScale;
+      };
+      this.img.src = this.imgPath;
+    },
+    draw: function () {
+      context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
+                          this.img.width, this.img.height);
+    },
+    update: function (deltaMillis) {
+    }
+};
+troll01.load();
+
+var troll02 = {
+  imgPath: "img/troll02.png",
+  img: new Image(),
+  x: trollPositions[1].x,
+  y: trollPositions[1].y,
+  load: function(){
+      this.img.onload = function() {
+        resourcesLoaded += 1;
+        this.width *= imageScale;
+        this.height *= imageScale;
+      };
+      this.img.src = this.imgPath;
+    },
+    draw: function () {
+      context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
+                          this.img.width, this.img.height);
+    },
+    update: function (deltaMillis) {
+    }
+};
+troll02.load();
+
+var troll03 = {
+  imgPath: "img/troll03.png",
+  img: new Image(),
+  x: trollPositions[2].x,
+  y: trollPositions[2].y,
+  load: function(){
+      this.img.onload = function() {
+        resourcesLoaded += 1;
+        this.width *= imageScale;
+        this.height *= imageScale;
+      };
+      this.img.src = this.imgPath;
+    },
+    draw: function () {
+      context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
+                          this.img.width, this.img.height);
+    },
+    update: function (deltaMillis) {
+    }
+};
+troll03.load();
+
+var allTrolls = [troll01, troll02, troll03];
 
 var mouse = {
   x: 0,
@@ -255,6 +302,7 @@ function update() {
                         forceImage.width, forceImage.height);     
     for(var i=0; i<3; i++){
       allNerds[i].draw();
+      allTrolls[i].draw();
     }
     cannon.update(deltaMillis);
     cannon.draw();
