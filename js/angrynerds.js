@@ -19,28 +19,22 @@ backgroundImage.onload = function () {
 };
 backgroundImage.src = "img/cenario.png";
 
-var schoolImage = new Image();
-schoolImage.onload = function () {
+function onResourceLoaded() {
   resourcesLoaded += 1;
-  schoolImage.width *= imageScale;
-  schoolImage.height *= imageScale;
-};
+  this.width *= imageScale;
+  this.height *= imageScale;
+}
+
+var schoolImage = new Image();
+schoolImage.onload = onResourceLoaded;
 schoolImage.src = "img/escola.png";
 
 var forceImage = new Image();
-forceImage.onload = function () {
-  resourcesLoaded += 1;
-  forceImage.width *= imageScale;
-  forceImage.height *= imageScale;
-};
+forceImage.onload = onResourceLoaded;
 forceImage.src = "img/barra_de_forca.png";
 
 var cannonBaseImage = new Image();
-cannonBaseImage.onload = function () {
-  resourcesLoaded += 1;
-  cannonBaseImage.width *= imageScale;
-  cannonBaseImage.height *= imageScale;
-};
+cannonBaseImage.onload = onResourceLoaded;
 cannonBaseImage.src = "img/suporte_canhao.png";
 
 var cannon = {
@@ -97,11 +91,7 @@ var forceArrow = {
   signal: 1,
   active: false,
   load: function(){
-    this.img.onload = function() {
-      resourcesLoaded += 1;
-      this.width *= imageScale;
-      this.height *= imageScale;
-    };
+    this.img.onload = onResourceLoaded;
     this.img.src = this.imgPath;
   },
   draw: function () {
@@ -148,34 +138,22 @@ var IDLE = "idle";
 var TO_BE_SHOT = "to be shot";
 var FLYING = "flying";
 var DEAD = "dead";
-var maxForce = 600;
+var maxForce = 900;
+var minForce = 300;
+var gravity = 400;
 
-var alfredo = {
-  imgPath: "img/alfredo.png",
-  img: new Image(),
-  x: nerdsPositions[0].x,
-  y: nerdsPositions[0].y,
-  speed: {x:0, y:0},
-  state: IDLE,
-  load: function(){
-      this.img.onload = function() {
-        resourcesLoaded += 1;
-        this.width *= imageScale;
-        this.height *= imageScale;
-      };
-      this.img.src = this.imgPath;
-    },
-    draw: function () {
+function nerdDraw() {
       if(this.state === IDLE || this.state === FLYING)
       context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
                           this.img.width, this.img.height);
-    },
-    update: function (deltaMillis) {
+    }
+
+function nerdUpdate (deltaMillis) {
       if(this.state === FLYING) {
         var deltaSecs = deltaMillis/1000.0;
         this.x += this.speed.x * deltaSecs;
         this.y += this.speed.y * deltaSecs;
-        this.speed.y += 98 * deltaSecs;
+        this.speed.y += gravity * deltaSecs;
         for(var i=0; i<3; i++){
           if(collisionDetection(this, allTrolls[i])){
             this.state = DEAD;
@@ -190,6 +168,20 @@ var alfredo = {
         this.y = cannon.y + cannon.pivot.y;
       }
     }
+
+var alfredo = {
+  imgPath: "img/alfredo.png",
+  img: new Image(),
+  x: nerdsPositions[0].x,
+  y: nerdsPositions[0].y,
+  speed: {x:0, y:0},
+  state: IDLE,
+  load: function(){
+      this.img.onload = onResourceLoaded;
+      this.img.src = this.imgPath;
+    },
+    draw: nerdDraw,
+    update: nerdUpdate
 };
 alfredo.load();
 
@@ -201,38 +193,11 @@ var fuvio = {
   speed: {x:0, y:0},
   state: IDLE,
   load: function(){
-      this.img.onload = function() {
-        resourcesLoaded += 1;
-        this.width *= imageScale;
-        this.height *= imageScale;
-      };
+      this.img.onload = onResourceLoaded;
       this.img.src = this.imgPath;
     },
-    draw: function () {
-      if(this.state === IDLE || this.state === FLYING)
-      context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
-                          this.img.width, this.img.height);
-    },
-    update: function (deltaMillis) {
-      if(this.state === FLYING) {
-        var deltaSecs = deltaMillis/1000.0;
-        this.x += this.speed.x * deltaSecs;
-        this.y += this.speed.y * deltaSecs;
-        this.speed.y += 98 * deltaSecs;
-        for(var i=0; i<3; i++){
-          if(collisionDetection(this, allTrolls[i])){
-            this.state = DEAD;
-            allTrolls[i].state = DEAD;
-          }
-        }
-        if(this.x > canvasWidth || this.y > canvasHeight){
-          this.state = DEAD;
-        }
-      } else if(this.state === TO_BE_SHOT) {
-        this.x = cannon.x + cannon.pivot.x;
-        this.y = cannon.y + cannon.pivot.y;
-      }
-    }
+  draw: nerdDraw,
+  update: nerdUpdate
 };
 fuvio.load();
 
@@ -244,43 +209,21 @@ var leonel = {
   speed: {x:0, y:0},
   state: IDLE,
   load: function(){
-      this.img.onload = function() {
-        resourcesLoaded += 1;
-        this.width *= imageScale;
-        this.height *= imageScale;
-      };
+      this.img.onload = onResourceLoaded;
       this.img.src = this.imgPath;
     },
-    draw: function () {
-      if(this.state === IDLE || this.state === FLYING)
-        context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
-                          this.img.width, this.img.height);
-    },
-    update: function (deltaMillis) {
-      if(this.state === FLYING) {
-        var deltaSecs = deltaMillis/1000.0;
-        this.x += this.speed.x * deltaSecs;
-        this.y += this.speed.y * deltaSecs;
-        this.speed.y += 98 * deltaSecs;
-        for(var i=0; i<3; i++){
-          if(collisionDetection(this, allTrolls[i])){
-            this.state = DEAD;
-            allTrolls[i].state = DEAD;
-          }
-        }
-        if(this.x > canvasWidth || this.y > canvasHeight){
-          this.state = DEAD;
-        }
-      } else if(this.state === TO_BE_SHOT) {
-        this.x = cannon.x + cannon.pivot.x;
-        this.y = cannon.y + cannon.pivot.y;
-      }
-    }
+    draw: nerdDraw,
+    update: nerdUpdate
 };
 leonel.load();
 
 var allNerds = [alfredo, fuvio, leonel];
 
+function trollDraw () {
+      if(this.state === IDLE)
+      context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
+                          this.img.width, this.img.height);
+    }
 var troll01 = {
   imgPath: "img/troll01.png",
   img: new Image(),
@@ -288,20 +231,10 @@ var troll01 = {
   y: trollPositions[0].y,
   state: IDLE,
   load: function(){
-      this.img.onload = function() {
-        resourcesLoaded += 1;
-        this.width *= imageScale;
-        this.height *= imageScale;
-      };
+      this.img.onload = onResourceLoaded;
       this.img.src = this.imgPath;
     },
-    draw: function () {
-      if(this.state === IDLE)
-      context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
-                          this.img.width, this.img.height);
-    },
-    update: function (deltaMillis) {
-    }
+    draw: trollDraw,
 };
 troll01.load();
 
@@ -312,20 +245,10 @@ var troll02 = {
   y: trollPositions[1].y,
   state: IDLE,
   load: function(){
-      this.img.onload = function() {
-        resourcesLoaded += 1;
-        this.width *= imageScale;
-        this.height *= imageScale;
-      };
+      this.img.onload = onResourceLoaded;
       this.img.src = this.imgPath;
     },
-    draw: function () {
-      if(this.state === IDLE)
-      context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
-                          this.img.width, this.img.height);
-    },
-    update: function (deltaMillis) {
-    }
+    draw: trollDraw
 };
 troll02.load();
 
@@ -336,20 +259,10 @@ var troll03 = {
   y: trollPositions[2].y,
   state: IDLE,
   load: function(){
-      this.img.onload = function() {
-        resourcesLoaded += 1;
-        this.width *= imageScale;
-        this.height *= imageScale;
-      };
+      this.img.onload = onResourceLoaded;
       this.img.src = this.imgPath;
     },
-    draw: function () {
-      if(this.state === IDLE)
-      context2d.drawImage(this.img, this.x-this.img.width*0.5, this.y-this.img.height*0.5,
-                          this.img.width, this.img.height);
-    },
-    update: function (deltaMillis) {
-    }
+    draw: trollDraw
 };
 troll03.load();
 
@@ -379,8 +292,8 @@ document.onmouseup = function(e){
     if(e.pageX > canvasRect.left && e.pageX < canvasRect.right &&
        e.pageY > canvasRect.top && e.pageY < canvasRect.bottom && e.button == 0){
       if(forceArrow.active && nerdIndex < allNerds.length){
-        allNerds[nerdIndex].speed.x = Math.cos(cannon.angle) * forceArrow.force * maxForce;
-        allNerds[nerdIndex].speed.y = Math.sin(cannon.angle) * forceArrow.force * maxForce;
+        allNerds[nerdIndex].speed.x = Math.cos(cannon.angle) * (minForce + forceArrow.force * (maxForce - minForce));
+        allNerds[nerdIndex].speed.y = Math.sin(cannon.angle) * (minForce + forceArrow.force * (maxForce - minForce));
         allNerds[nerdIndex].state = FLYING;
         nerdIndex += 1;
         forceArrow.active = false;
@@ -394,7 +307,7 @@ function update() {
   var deltaMillis = currentMillis - lastMillis;
   lastMillis = currentMillis;
 
-  if(resourcesLoaded >= 6) {
+  if(resourcesLoaded >= 12) {
     context2d.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
     context2d.drawImage(schoolImage, canvasWidth-schoolImage.width, canvasHeight-schoolImage.height,
                         schoolImage.width, schoolImage.height);
