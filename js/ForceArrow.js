@@ -16,6 +16,7 @@ ForceArrow.prototype.update = function (deltaMillis){
         this.force = 0;
         this.signal = 1;
     }
+    this.y = this.maxY - (this.maxY - this.minY) * this.force;
 };
 
 function ForceArrow(imgSource, initObj){ 

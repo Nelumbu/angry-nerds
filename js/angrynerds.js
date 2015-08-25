@@ -62,6 +62,24 @@ gameCanvas.onmousemove = function(evt){
   }
 };
 
+gameCanvas.onmousedown = function(evt) {
+  if(forceArrow){
+    forceArrow.active = true;
+  }
+};
+
+gameCanvas.onmouseup = function(evt) {
+  if(forceArrow){
+    forceArrow.active = false;
+  }
+};
+
+//gameCanvas.onclick = function(evt) {
+//  if(forceArrow){
+//    forceArrow.active = !forceArrow.active;
+//  }
+//};
+
 window.requestAnimFrame = (function(){
   return  window.requestAnimationFrame       ||
           window.webkitRequestAnimationFrame ||
@@ -95,6 +113,7 @@ var lastMillis = new Date().getTime();
     forceBar.draw(context2d);
     context2d.fillRect(cannon.x+cannon.pivot.x-2,
       cannon.y+cannon.pivot.y-2, 4, 4);
+    forceArrow.update(deltaMillis);
     forceArrow.draw(context2d);
   } else {
     context2d.fillStyle="#000000";
