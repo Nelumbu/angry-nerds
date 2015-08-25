@@ -13,7 +13,7 @@ var cannonBase;
 var cannon;
 var forceBar;
 var forceArrow;
-var alfredo, leonel, fulvio;
+var alfredo, leonel, fuvio;
 var troll01, troll02, troll03;
 var allInstantiated = false;
 function bgLoaded(){
@@ -40,9 +40,13 @@ function bgLoaded(){
         this.angle = Math.atan2(localMouse.y-(this.y+this.pivot.y), localMouse.x-(this.x+this.pivot.x));
       }
     }, x:188, y:586});
-  /*cannon = new Resource("img/canhao.png", {onload:applyImageScale, pivot:{x:115, y:50}});
-  cannon = new Resource("img/canhao.png", {onload:applyImageScale, pivot:{x:115, y:50}});
-  cannon = new Resource("img/canhao.png", {onload:applyImageScale, pivot:{x:115, y:50}});*/
+  forceArrow = new ForceArrow("img/seta_forca.png", {onload:applyImageScale, x:85, y:600, minY:300, maxY:600});
+  alfredo = new Nerd("img/alfredo.png", {onload:applyImageScale, x:370, y:640});
+  fuvio = new Nerd("img/fuvio.png", {onload:applyImageScale, x:480, y:635});
+  leonel = new Nerd("img/leonel.png", {onload:applyImageScale, x:570, y:635});
+  troll01 = new Troll("img/troll01.png", {onload:applyImageScale, x:815, y:600});
+  troll02 = new Troll("img/troll02.png", {onload:applyImageScale, x:915, y:330});
+  troll03 = new Troll("img/troll03.png", {onload:applyImageScale, x:1115, y:200});
   allInstantiated = true;
 }
 background = new Resource("img/cenario.png", {onload:bgLoaded});
@@ -77,13 +81,21 @@ var lastMillis = new Date().getTime();
   if(allInstantiated && Resource.loadingComplete){
     background.draw(context2d);
     school.draw(context2d);
-    cannon.update()
+    for(var i=0;i<Nerd.allNerds.length;i++){
+      Nerd.allNerds[i].update(deltaMillis);
+      Nerd.allNerds[i].draw(context2d);
+    }
+    for(var i=0;i<Troll.allTrolls.length;i++){
+      Troll.allTrolls[i].update(deltaMillis);
+      Troll.allTrolls[i].draw(context2d);
+    }
+    cannon.update();
     cannon.draw(context2d);
     cannonBase.draw(context2d);
     forceBar.draw(context2d);
     context2d.fillRect(cannon.x+cannon.pivot.x-2,
       cannon.y+cannon.pivot.y-2, 4, 4);
-    //background.draw(context2d);
+    forceArrow.draw(context2d);
   } else {
     context2d.fillStyle="#000000";
     context2d.clearRect(0, 0, canvasWidth, canvasHeight);
