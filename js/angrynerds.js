@@ -50,6 +50,8 @@ function bgLoaded(){
   allInstantiated = true;
 }
 background = new Resource("img/cenario.png", {onload:bgLoaded});
+var maxForce = 900;
+var minForce = 300;
 
 var localMouse = {x:-1, y:-1};
 gameCanvas.onmousemove = function(evt){
@@ -100,7 +102,7 @@ var lastMillis = new Date().getTime();
     background.draw(context2d);
     school.draw(context2d);
     for(var i=0;i<Nerd.allNerds.length;i++){
-      Nerd.allNerds[i].update(deltaMillis);
+      Nerd.allNerds[i].update(deltaMillis, gameCanvas, cannon);
       Nerd.allNerds[i].draw(context2d);
     }
     for(var i=0;i<Troll.allTrolls.length;i++){
