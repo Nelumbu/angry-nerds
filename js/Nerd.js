@@ -15,17 +15,19 @@ Nerd.prototype.update = function (deltaMillis, canvas, cannon){
             this.y += this.speed.y * deltaSecs;
             this.speed.y += gravity * deltaSecs;
             for(var i=0; i<3; i++){
-                if(collisionDetection(this, allTrolls[i])){
+                if(Troll.allTrolls[i].state !== Troll.DEAD && 
+                   collisionCircle(this, Troll.allTrolls[i]))
+                {
                     this.state = Nerd.DEAD;
-                    allTrolls[i].state = Nerd.DEAD;
+                    Troll.allTrolls[i].state = Nerd.DEAD;
                 }
             }
             if(this.x > canvas.width || this.y > canvas.height){
                 this.state = Nerd.DEAD;
             }
         } else if(this.state === Nerd.TO_BE_SHOT) {
-            this.x = cannon.x + cannon.pivot.x;
-            this.y = cannon.y + cannon.pivot.y;
+            this.x = cannon.x + cannon.pivot.x - this.img.width * 0.5;
+            this.y = cannon.y + cannon.pivot.y - this.img.height * 0.5;
         }
     }
 };
