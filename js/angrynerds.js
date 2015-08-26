@@ -66,20 +66,20 @@ gameCanvas.onmousemove = function(evt){
 
 var nerdIndex = 0;
 gameCanvas.onmousedown = function(evt) {
-  if(forceArrow){
+  if(forceArrow && nerdIndex < Nerd.allNerds.length){
     forceArrow.active = true;
     Nerd.allNerds[nerdIndex].state = Nerd.TO_BE_SHOT;
   }
 };
 
 gameCanvas.onmouseup = function(evt) {
-  if(forceArrow){
+  if(forceArrow && nerdIndex < Nerd.allNerds.length){
     forceArrow.active = false;
     var shootForce = minForce + forceArrow.force * (maxForce - minForce);
     Nerd.allNerds[nerdIndex].speed.x = Math.cos(cannon.angle) * shootForce;
     Nerd.allNerds[nerdIndex].speed.y = Math.sin(cannon.angle) * shootForce;
     Nerd.allNerds[nerdIndex].state = Nerd.FLYING;
-
+    nerdIndex += 1;
   }
 };
 
